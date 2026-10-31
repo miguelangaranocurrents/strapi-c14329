@@ -797,8 +797,17 @@ const RelationModalWithContext = ({
           }
           hasMoreItems={hasNextPage}
           loading={isLoadingSearchRelations || isLoadingPermissions}
-          onOpenChange={() => {
-            handleSearch(textValue ?? '');
+          onOpenChange={(isOpen) => {
+            /**
+             * Opening the list starts a fresh search. The text can still hold the label of the
+             * option that was just selected, which would filter out every remaining relation.
+             */
+            if (isOpen) {
+              setTextValue('');
+              handleSearch('');
+            } else {
+              handleSearch(textValue ?? '');
+            }
           }}
           noOptionsMessage={() =>
             formatMessage({
