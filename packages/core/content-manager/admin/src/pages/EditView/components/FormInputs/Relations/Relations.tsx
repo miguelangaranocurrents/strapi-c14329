@@ -750,9 +750,14 @@ const RelationModalWithContext = ({
 
   const options = data?.results ?? [];
 
+  /**
+   * Once a relation is selected, the search goes back to an empty query so the list
+   * is already up to date (and cached) when the dropdown is reopened.
+   */
   React.useLayoutEffect(() => {
     setTextValue('');
-  }, [fieldValue]);
+    setSearchParams((s) => ({ ...s, _q: '', page: 1 }));
+  }, [fieldValue, setSearchParams]);
 
   const handleSearch = async (search: string) => {
     setSearchParams((s) => ({ ...s, _q: search, page: 1 }));
@@ -797,17 +802,8 @@ const RelationModalWithContext = ({
           }
           hasMoreItems={hasNextPage}
           loading={isLoadingSearchRelations || isLoadingPermissions}
-          onOpenChange={(isOpen) => {
-            /**
-             * Opening the list starts a fresh search. The text can still hold the label of the
-             * option that was just selected, which would filter out every remaining relation.
-             */
-            if (isOpen) {
-              setTextValue('');
-              handleSearch('');
-            } else {
-              handleSearch(textValue ?? '');
-            }
+          onOpenChange={() => {
+            handleSearch(textValue ?? '');
           }}
           noOptionsMessage={() =>
             formatMessage({
