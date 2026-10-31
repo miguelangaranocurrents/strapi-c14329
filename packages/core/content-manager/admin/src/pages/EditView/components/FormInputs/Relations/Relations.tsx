@@ -545,7 +545,7 @@ const RelationsInput = ({
   const targetModel = props.attribute.targetModel;
 
   const searchParamsDebounced = useDebounce(searchParams, 300);
-  const [searchForTrigger, { data, isLoading }] = useLazySearchRelationsQuery();
+  const [searchForTrigger, { data, isFetching }] = useLazySearchRelationsQuery();
 
   /**
    * Because we're using a lazy query, we need to trigger the search
@@ -675,7 +675,7 @@ const RelationsInput = ({
           placeholder={placeholder}
           hasNextPage={hasNextPage}
           isLoadingPermissions={isLoadingPermissions}
-          isLoadingSearchRelations={isLoading}
+          isLoadingSearchRelations={isFetching}
           handleChange={handleChange}
           setSearchParams={setSearchParams}
           data={data}
